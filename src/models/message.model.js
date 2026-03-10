@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
 
- messageId:String,
-
  senderId:{
   type:mongoose.Schema.Types.ObjectId,
   ref:"User"
@@ -16,11 +14,16 @@ const messageSchema = new mongoose.Schema({
 
  encryptedPayload:String,
 
- encryptedMediaUrl:String,
+ type:{
+  type:String,
+  enum:["text","image","voice"],
+  default:"text"
+ },
 
- nonce:String,
-
- selfDestructTimer:Number,
+ selfDestructTimer:{
+  type:Number,
+  default:0
+ },
 
  openedAt:Date,
 
