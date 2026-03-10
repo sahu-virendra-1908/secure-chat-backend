@@ -1,27 +1,27 @@
 const cron = require("node-cron");
-
 const Message = require("../models/message.model");
 
-cron.schedule("* * * * *",async()=>{
+cron.schedule("* * * * *", async ()=>{
 
- const now = new Date();
+  const now = new Date();
 
- const messages = await Message.find({
-  openedAt:{$ne:null}
- });
+  const messages = await Message.find({
+    selfDestructTimer: { $gt: 0 },
+    openedAt: { $ne: null }
+  });
 
- for(const m of messages){
+  for(const msg of messages){
 
-  const expire = new Date(
-   m.openedAt.getTime()+m.selfDestructTimer*60000
-  );
+    const expireTime = new Date(
+      msg.openedAt.getTime() + msg.selfDestructTimer * 60000
+    );
 
-  if(now > expire){
+    if(now > expireTime){
 
-   await Message.deleteOne({_id:m._id});
+      await Message.deleteOne({_id: msg._id});
+
+    }
 
   }
-
- }
 
 });

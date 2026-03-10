@@ -3,21 +3,21 @@ const Message = require("../models/message.model");
 
 module.exports = (server) => {
 
-  const io = socketIO(server,{
-    cors:{origin:"*"}
+  const io = socketIO(server, {
+    cors: { origin: "*" }
   });
 
-  io.on("connection",(socket)=>{
+  io.on("connection", (socket) => {
 
     console.log("User connected");
 
-    socket.on("join",(userId)=>{
+    socket.on("join", (userId) => {
       socket.join(userId);
     });
 
-    socket.on("sendMessage", async (data)=>{
+    socket.on("sendMessage", async (data) => {
 
-      try{
+      try {
 
         const message = await Message.create({
           senderId: data.senderId,
@@ -29,7 +29,7 @@ module.exports = (server) => {
 
         io.to(data.receiverId).emit("receiveMessage", message);
 
-      }catch(err){
+      } catch (err) {
         console.log(err);
       }
 

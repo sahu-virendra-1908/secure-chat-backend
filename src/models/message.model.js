@@ -2,36 +2,40 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
 
- senderId:{
-  type:mongoose.Schema.Types.ObjectId,
-  ref:"User"
- },
+  senderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
 
- receiverId:{
-  type:mongoose.Schema.Types.ObjectId,
-  ref:"User"
- },
+  receiverId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
 
- encryptedPayload:String,
+  encryptedPayload: String,
 
- type:{
-  type:String,
-  enum:["text","image","voice"],
-  default:"text"
- },
+  type: {
+    type: String,
+    enum: ["text","image","voice"],
+    default: "text"
+  },
 
- selfDestructTimer:{
-  type:Number,
-  default:0
- },
+  selfDestructTimer: {
+    type: Number,
+    default: 0
+  },
 
- openedAt:Date,
+  openedAt: Date,
 
- createdAt:{
-  type:Date,
-  default:Date.now
- }
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 
 });
 
-module.exports = mongoose.model("Message",messageSchema);
+messageSchema.index({ senderId: 1, receiverId: 1 });
+
+module.exports = mongoose.model("Message", messageSchema);
